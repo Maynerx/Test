@@ -1,3 +1,15 @@
+import os
+
+# Remove variables that may mislead PyTorch/XLA about TPU topology
+for var in ["TPU_PROCESS_ADDRESSES", "CLOUD_TPU_TASK_ID", "TPU_NAME"]:
+    if var in os.environ:
+        os.environ.pop(var)
+
+# Also ensure the PJRT_DEVICE is set to TPU if needed:
+os.environ["PJRT_DEVICE"] = "TPU"
+
+
+
 import torch_xla.core.xla_model as xm
 import torch_xla.distributed.parallel_loader as pl
 import torch_xla.distributed.xla_multiprocessing as xmp
